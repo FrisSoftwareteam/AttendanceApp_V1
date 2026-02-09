@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: "Source Sans 3", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #f6fbff 0%, #f6f6f6 50%, #f1f1f1 100%);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
