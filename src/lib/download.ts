@@ -1,7 +1,7 @@
-const API_BASE = "/api";
+import { withApiBase } from "./apiBase";
 
 export async function downloadFile(path: string, token: string, fallbackName: string) {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(withApiBase(path), {
     headers: {
       Authorization: `Bearer ${token}`
     }

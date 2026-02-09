@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+import { withApiBase } from "./apiBase";
 
 export type ApiOptions = {
   token?: string | null;
@@ -10,7 +10,7 @@ export async function apiRequest<T>(path: string, options: ApiOptions = {}): Pro
   const { token, method, body } = options;
   const resolvedMethod = method ?? (body ? "POST" : "GET");
 
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(withApiBase(path), {
     method: resolvedMethod,
     headers: {
       "Content-Type": "application/json",
