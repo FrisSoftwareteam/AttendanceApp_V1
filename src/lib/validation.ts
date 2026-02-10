@@ -5,6 +5,10 @@ export const loginSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters")
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().email("Enter a valid email")
+});
+
 export const signupSchema = z
   .object({
     name: z.string().trim().min(2, "Name must be at least 2 characters"),
@@ -26,8 +30,29 @@ export const signupSchema = z
     }
   });
 
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(20, "Invalid reset token"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(64, "Password must be at most 64 characters"),
+    confirmPassword: z.string().min(8, "Confirm your password")
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: z.ZodIssueCode.custom,
+        message: "Passwords do not match"
+      });
+    }
+  });
+
 export type LoginValues = z.infer<typeof loginSchema>;
 export type SignupValues = z.infer<typeof signupSchema>;
+export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
 
 export function toFieldErrors(error: z.ZodError) {
   const flattened = error.flatten();

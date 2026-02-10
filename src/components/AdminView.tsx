@@ -19,6 +19,7 @@ type AdminRow = {
   time: string;
   status: "On time" | "Late" | "Missing";
   location: string;
+  accuracy: string;
   photoUrl?: string;
   photoLabel: string;
   flagComment?: string;
@@ -106,6 +107,7 @@ export default function AdminView({
         time: formatTime(item.capturedAt, item.timezone),
         status,
         location: item.locationLabel,
+        accuracy: formatAccuracy(item.accuracy),
         photoUrl: item.photoUrl,
         photoLabel: initials(item.userName),
         flagComment: item.flagComment,
@@ -122,6 +124,7 @@ export default function AdminView({
         time: "--",
         status: "Missing" as const,
         location: "--",
+        accuracy: "--",
         photoUrl: undefined,
         photoLabel: initials(user.name)
       }));
@@ -392,6 +395,7 @@ export default function AdminView({
                   <th className="px-4 py-3">Time</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Location</th>
+                  <th className="px-4 py-3">Accuracy</th>
                   <th className="px-4 py-3">Photo</th>
                 </tr>
               </thead>
@@ -421,6 +425,7 @@ export default function AdminView({
                       </div>
                     </td>
                     <td className="px-4 py-3 text-ink-600">{row.location}</td>
+                    <td className="px-4 py-3 text-ink-600">{row.accuracy}</td>
                     <td className="px-4 py-3">
                       {row.photoUrl ? (
                         <img
@@ -438,7 +443,7 @@ export default function AdminView({
                 ))}
                 {!loading && rows.length === 0 && (
                   <tr>
-                    <td className="px-4 py-6 text-sm text-ink-500" colSpan={5}>
+                    <td className="px-4 py-6 text-sm text-ink-500" colSpan={6}>
                       No check-ins recorded yet.
                     </td>
                   </tr>
@@ -596,6 +601,13 @@ function getLocalTimeParts(iso: string, timeZone?: string) {
     const minute = Number(parts.find((part) => part.type === "minute")?.value ?? "0");
     return { hour, minute };
   }
+}
+
+function formatAccuracy(accuracy?: number) {
+  if (typeof accuracy !== "number" || Number.isNaN(accuracy)) {
+    return "--";
+  }
+  return `±${Math.round(accuracy)}m`;
 }
 
 function parseCutoffTime(value: string) {
